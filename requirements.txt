@@ -1,3 +1,4 @@
 fast-flights==3.1.0
 selectolax>=0.3
 requests>=2.31
+typing_extensions>=4.0
