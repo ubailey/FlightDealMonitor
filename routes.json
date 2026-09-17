@@ -1,0 +1,106 @@
+{
+  "passengers": 1,
+  "currency": "USD",
+  "windowstartdays": 7,
+  "windowenddays": 180,
+  "newlowdropdollars": 15,
+  "newlowdroppercent": 3,
+  "weeklydigestday": "Monday",
+  "routes": [
+    {
+      "key": "ATLGUA",
+      "from": "ATL",
+      "to": "GUA",
+      "label": "Atlanta to Guatemala City",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLLHE",
+      "from": "ATL",
+      "to": "LHE",
+      "label": "Atlanta to Lahore",
+      "triplengths": [
+        14,
+        21
+      ]
+    },
+    {
+      "key": "LISATL",
+      "from": "LIS",
+      "to": "ATL",
+      "label": "Lisbon to Atlanta",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLDXB",
+      "from": "ATL",
+      "to": "DXB",
+      "label": "Atlanta to Dubai",
+      "triplengths": [
+        10,
+        14
+      ]
+    },
+    {
+      "key": "ATLAGP",
+      "from": "ATL",
+      "to": "AGP",
+      "label": "Atlanta to Malaga",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLSVQ",
+      "from": "ATL",
+      "to": "SVQ",
+      "label": "Atlanta to Seville",
+      "triplengths": [
+        7,
+        10
+      ]
+    }
+  ],
+  "dealoriginkeywords": [
+    "atlanta"
+  ],
+  "dealdestinationkeywords": [
+    "guatemala",
+    "atitlan",
+    "lahore",
+    "pakistan",
+    "lisbon",
+    "portugal",
+    "dubai",
+    "malaga",
+    "seville",
+    "sevilla",
+    "andalusia",
+    "andalucia",
+    "southern spain"
+  ],
+  "dealfeeds": [
+    {
+      "name": "Travelzoo Top 20",
+      "type": "travelzoo",
+      "url": "https://www.travelzoo.com/top20/"
+    },
+    {
+      "name": "The Flight Deal",
+      "type": "rss",
+      "url": "https://www.theflightdeal.com/feed/"
+    },
+    {
+      "name": "Fly4free",
+      "type": "rss",
+      "url": "https://www.fly4free.com/feed/"
+    }
+  ]
+}
