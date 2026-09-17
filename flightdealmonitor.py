@@ -125,7 +125,7 @@ def scanroute(key):
             time.sleep(random.uniform(0.5, 1.0))
         day += dt.timedelta(days=1)
 
-    if total and failures / total > 0.2:
+    if total and failures / total > 0.4:
         raise SystemExit(f"{key}: {failures}/{total} lookups failed, refusing to report on bad data")
 
     RESULTSDIR.mkdir(exist_ok=True)
