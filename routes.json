@@ -27,6 +27,20 @@
         21
       ]
     },
+        {
+      "key": "JFKLHE",
+      "from": "JFK",
+      "to": "LHE",
+      "label": "New York JFK to Lahore",
+      "triplengths": [14, 21]
+    },
+    {
+      "key": "EWRLHE",
+      "from": "EWR",
+      "to": "LHE",
+      "label": "New York Newark to Lahore",
+      "triplengths": [14, 21]
+    },
     {
       "key": "LISATL",
       "from": "LIS",
