@@ -1,0 +1,66 @@
+name: Daily Flight Deal Check
+
+on:
+  schedule:
+    - cron: "0 12 * * *"      # 8 AM ET (7 AM in winter), every day
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  routes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: list
+        run: echo "matrix=$(python3 -c "import json;print(json.dumps([r['key'] for r in json.load(open('routes.json'))['routes']]))")" >> "$GITHUB_OUTPUT"
+
+  scan:
+    needs: routes
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        route: ${{ fromJson(needs.routes.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python flightdealmonitor.py scan --route ${{ matrix.route }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.route }}
+          path: results/${{ matrix.route }}.json
+
+  report:
+    needs: scan
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          path: results
+          merge-multiple: true
+      - run: python flightdealmonitor.py report
+        env:
+          GMAILUSER: ${{ secrets.GMAILUSER }}
+          GMAILAPPPASSWORD: ${{ secrets.GMAILAPPPASSWORD }}
+          ALERTRECIPIENT: ${{ secrets.ALERTRECIPIENT }}
+      - name: Save price history
+        run: |
+          git config user.name "flightdealmonitor"
+          git config user.email "flightdealmonitor@users.noreply.github.com"
+          git add .state/lows.json
+          git diff --cached --quiet || git commit -m "Update price lows $(date -u +%F)"
+          git push
