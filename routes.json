@@ -206,6 +206,36 @@
         7,
         10
       ]
+    },
+    {
+      "key": "ATLSJU",
+      "from": "ATL",
+      "to": "SJU",
+      "label": "Atlanta to San Juan, Puerto Rico",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLCTG",
+      "from": "ATL",
+      "to": "CTG",
+      "label": "Atlanta to Cartagena, Colombia",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLMTY",
+      "from": "ATL",
+      "to": "MTY",
+      "label": "Atlanta to Monterrey, Mexico",
+      "triplengths": [
+        7,
+        10
+      ]
     }
   ],
   "dealoriginkeywords": [
@@ -242,7 +272,11 @@
     "granada",
     "zaragoza",
     "athens",
-    "greece"
+    "greece",
+    "san juan",
+    "puerto rico",
+    "cartagena",
+    "monterrey"
   ],
   "dealfeeds": [
     {
