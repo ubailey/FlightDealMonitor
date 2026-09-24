@@ -146,6 +146,16 @@
         7,
         10
       ]
+    },
+    {
+      "key": "ATLAQP",
+      "from": "ATL",
+      "to": "AQP",
+      "label": "Atlanta to Arequipa",
+      "triplengths": [
+        7,
+        10
+      ]
     }
   ],
   "dealoriginkeywords": [
@@ -174,7 +184,9 @@
     "liverpool",
     "petra",
     "amman",
-    "jordan"
+    "jordan",
+    "arequipa",
+    "peru"
   ],
   "dealfeeds": [
     {
