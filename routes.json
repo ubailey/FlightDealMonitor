@@ -156,6 +156,56 @@
         7,
         10
       ]
+    },
+    {
+      "key": "ATLMAD",
+      "from": "ATL",
+      "to": "MAD",
+      "label": "Atlanta to Madrid",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLRMU",
+      "from": "ATL",
+      "to": "RMU",
+      "label": "Atlanta to Murcia",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLGRX",
+      "from": "ATL",
+      "to": "GRX",
+      "label": "Atlanta to Granada",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLZAZ",
+      "from": "ATL",
+      "to": "ZAZ",
+      "label": "Atlanta to Zaragoza",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLATH",
+      "from": "ATL",
+      "to": "ATH",
+      "label": "Atlanta to Athens",
+      "triplengths": [
+        7,
+        10
+      ]
     }
   ],
   "dealoriginkeywords": [
@@ -186,7 +236,13 @@
     "amman",
     "jordan",
     "arequipa",
-    "peru"
+    "peru",
+    "madrid",
+    "murcia",
+    "granada",
+    "zaragoza",
+    "athens",
+    "greece"
   ],
   "dealfeeds": [
     {
