@@ -27,19 +27,25 @@
         21
       ]
     },
-        {
+    {
       "key": "JFKLHE",
       "from": "JFK",
       "to": "LHE",
       "label": "New York JFK to Lahore",
-      "triplengths": [14, 21]
+      "triplengths": [
+        14,
+        21
+      ]
     },
     {
       "key": "EWRLHE",
       "from": "EWR",
       "to": "LHE",
       "label": "New York Newark to Lahore",
-      "triplengths": [14, 21]
+      "triplengths": [
+        14,
+        21
+      ]
     },
     {
       "key": "LISATL",
@@ -80,6 +86,66 @@
         7,
         10
       ]
+    },
+    {
+      "key": "ATLMDZ",
+      "from": "ATL",
+      "to": "MDZ",
+      "label": "Atlanta to Mendoza",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLYHZ",
+      "from": "ATL",
+      "to": "YHZ",
+      "label": "Atlanta to Halifax (Nova Scotia)",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLYQB",
+      "from": "ATL",
+      "to": "YQB",
+      "label": "Atlanta to Quebec City",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLYUL",
+      "from": "ATL",
+      "to": "YUL",
+      "label": "Atlanta to Montreal",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLLPL",
+      "from": "ATL",
+      "to": "LPL",
+      "label": "Atlanta to Liverpool",
+      "triplengths": [
+        7,
+        10
+      ]
+    },
+    {
+      "key": "ATLAMM",
+      "from": "ATL",
+      "to": "AMM",
+      "label": "Atlanta to Amman (for Petra)",
+      "triplengths": [
+        7,
+        10
+      ]
     }
   ],
   "dealoriginkeywords": [
@@ -98,7 +164,17 @@
     "sevilla",
     "andalusia",
     "andalucia",
-    "southern spain"
+    "southern spain",
+    "mendoza",
+    "argentina",
+    "halifax",
+    "nova scotia",
+    "quebec",
+    "montreal",
+    "liverpool",
+    "petra",
+    "amman",
+    "jordan"
   ],
   "dealfeeds": [
     {
