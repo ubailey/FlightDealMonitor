@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-26",
+ "updated": "2026-09-27",
  "lows": {
   "ATLGUA": {
    "2026-10": 497,
@@ -77,16 +77,16 @@
    "2026-10": 529,
    "2026-11": 514,
    "2026-12": 576,
-   "2027-01": 554,
+   "2027-01": 534,
    "2027-02": 515
   },
   "ATLYQB": {
    "2026-10": 549,
-   "2026-11": 546,
+   "2026-11": 536,
    "2026-12": 517,
    "2027-01": 546,
    "2027-02": 547,
-   "2027-03": 554
+   "2027-03": 544
   },
   "ATLYUL": {
    "2026-10": 561,
@@ -118,9 +118,9 @@
   "ATLMAD": {
    "2026-10": 710,
    "2026-11": 749,
-   "2026-12": 800,
+   "2026-12": 790,
    "2027-01": 770,
-   "2027-02": 800,
+   "2027-02": 790,
    "2027-03": 779
   },
   "ATLGRX": {
@@ -158,6 +158,7 @@
   "$899 Lisbon & Porto: 6 nights, flights & train",
   "$999 Explore Spain & Portugal: 9 nights w/flights",
   "$999 Lisbon & Porto: 6 nights from DC",
+  "Non-stop flights from Manchester to Atlanta, USA for \u00a3445",
   "Rock-bottom fares \ud83d\udd25  SAS flights from many European cities to Atlanta, USA from \u20ac248"
  ]
 }
