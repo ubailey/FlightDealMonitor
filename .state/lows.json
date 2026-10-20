@@ -1,10 +1,10 @@
 {
- "updated": "2026-10-19",
+ "updated": "2026-10-20",
  "lows": {
   "ATLGUA": {
    "2026-10": 497,
    "2026-11": 480,
-   "2026-12": 369,
+   "2026-12": 357,
    "2027-01": 297,
    "2027-02": 277,
    "2027-03": 443,
@@ -76,11 +76,11 @@
   "ATLMDZ": {
    "2026-10": 1462,
    "2026-11": 1491,
-   "2026-12": 1516,
-   "2027-01": 1453,
-   "2027-02": 1453,
-   "2027-03": 1487,
-   "2027-04": 1562
+   "2026-12": 1333,
+   "2027-01": 1333,
+   "2027-02": 1333,
+   "2027-03": 1333,
+   "2027-04": 1552
   },
   "ATLYHZ": {
    "2026-10": 691,
@@ -103,15 +103,15 @@
    "2026-10": 510,
    "2026-11": 314,
    "2026-12": 404,
-   "2027-01": 491,
-   "2027-02": 540,
-   "2027-03": 582,
-   "2027-04": 619
+   "2027-01": 406,
+   "2027-02": 418,
+   "2027-03": 499,
+   "2027-04": 583
   },
   "ATLLPL": {
    "2026-10": 1319,
    "2026-11": 1260,
-   "2026-12": 1373,
+   "2026-12": 1320,
    "2027-01": 1292,
    "2027-02": 1157
   },
@@ -151,7 +151,7 @@
    "2026-12": 108,
    "2027-01": 108,
    "2027-02": 133,
-   "2027-03": 264,
+   "2027-03": 255,
    "2027-04": 367
   },
   "ATLCTG": {
@@ -191,6 +191,7 @@
   "Rock-bottom fares \ud83d\udd25  SAS flights from many European cities to Atlanta, USA from \u20ac248",
   "Save $1300 Peru small-group adventure incl. flights",
   "Save $1500 Barcelona to Lisbon: 8-night guided trip",
+  "The Shorthaul \u2013 American: Dallas \u2013 Atlanta, Georgia (and vice versa). $97 (Basic Economy) / $197 (Regular Economy). Roundtrip, including all Taxes",
   "The Shorthaul \u2013 Delta: Philadelphia \u2013 Atlanta (and vice versa). $119 (Basic Economy) / $239 (Regular Economy). Roundtrip, including all Taxes"
  ]
 }
