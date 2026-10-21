@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-20",
+ "updated": "2026-10-21",
  "lows": {
   "ATLGUA": {
    "2026-10": 497,
@@ -84,11 +84,11 @@
   },
   "ATLYHZ": {
    "2026-10": 691,
-   "2026-11": 592,
-   "2026-12": 591,
-   "2027-01": 592,
-   "2027-02": 591,
-   "2027-03": 591
+   "2026-11": 567,
+   "2026-12": 570,
+   "2027-01": 566,
+   "2027-02": 565,
+   "2027-03": 565
   },
   "ATLYQB": {
    "2026-10": 549,
@@ -106,7 +106,7 @@
    "2027-01": 406,
    "2027-02": 418,
    "2027-03": 499,
-   "2027-04": 583
+   "2027-04": 556
   },
   "ATLLPL": {
    "2026-10": 1319,
@@ -144,6 +144,15 @@
    "2026-11": 886,
    "2026-12": 886,
    "2027-01": 825
+  },
+  "ATLATH": {
+   "2026-10": 990,
+   "2026-11": 799,
+   "2026-12": 859,
+   "2027-01": 799,
+   "2027-02": 799,
+   "2027-03": 799,
+   "2027-04": 849
   },
   "ATLSJU": {
    "2026-10": 106,
@@ -184,6 +193,7 @@
   "$839 & up Toronto & Montreal: 6 nights w/flights",
   "$849 Portugal road trip: 6 nights w/flights",
   "$899 Lisbon & Porto: 6 nights, flights & train",
+  "$949 Explore Athens & Santorini incl. flights",
   "$999 Explore Spain & Portugal: 9 nights w/flights",
   "$999 Lisbon & Porto: 6 nights from DC",
   "American: Los Angeles \u2013 Atlanta (and vice versa). $237 (Basic Economy) / $357 (Regular Economy). Roundtrip, including all Taxes",
