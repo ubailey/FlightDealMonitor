@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-27",
+ "updated": "2026-10-28",
  "lows": {
   "ATLGUA": {
    "2026-11": 480,
@@ -46,7 +46,7 @@
    "2026-12": 780,
    "2027-01": 780,
    "2027-02": 780,
-   "2027-03": 780,
+   "2027-03": 771,
    "2027-04": 781
   },
   "ATLAGP": {
@@ -79,7 +79,7 @@
    "2027-01": 544,
    "2027-02": 528,
    "2027-03": 544,
-   "2027-04": 631
+   "2027-04": 630
   },
   "ATLYUL": {
    "2026-11": 314,
@@ -134,7 +134,7 @@
    "2026-12": 108,
    "2027-01": 108,
    "2027-02": 133,
-   "2027-03": 216,
+   "2027-03": 200,
    "2027-04": 304
   },
   "ATLCTG": {
@@ -155,8 +155,10 @@
   }
  },
  "seendeals": [
+  "$1099 Tour Portugal for a week incl. flights, save $1500",
   "$1399 Ancient Greece guided trip, save $740",
   "$1399 Athens & Crete weeklong trip w/flights & hotels",
+  "$1399 Peru small-group adventure w/flights, save $1460",
   "$207* & up Puerto Rico roundtrip fares",
   "$259 Puerto Rico 4-star retreat, save 56%",
   "$317-$337* DC to Puerto Rico nonstop (roundtrip)",
