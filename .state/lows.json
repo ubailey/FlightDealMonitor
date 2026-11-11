@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-10",
+ "updated": "2026-11-11",
  "lows": {
   "ATLGUA": {
    "2026-11": 353,
@@ -44,7 +44,7 @@
    "2027-02": 731,
    "2027-03": 682,
    "2027-04": 871,
-   "2027-05": 900
+   "2027-05": 896
   },
   "ATLDXB": {
    "2026-11": 780,
@@ -88,8 +88,8 @@
    "2027-01": 544,
    "2027-02": 528,
    "2027-03": 544,
-   "2027-04": 591,
-   "2027-05": 591
+   "2027-04": 590,
+   "2027-05": 590
   },
   "ATLYUL": {
    "2026-11": 314,
@@ -98,14 +98,14 @@
    "2027-02": 418,
    "2027-03": 490,
    "2027-04": 503,
-   "2027-05": 698
+   "2027-05": 642
   },
   "ATLLPL": {
    "2026-11": 1260,
    "2026-12": 1320,
    "2027-01": 1292,
    "2027-02": 1157,
-   "2027-03": 1323
+   "2027-03": 1321
   },
   "ATLAMM": {
    "2026-11": 899,
@@ -176,6 +176,7 @@
  },
  "seendeals": [
   "$1099 Tour Portugal for a week incl. flights, save $1500",
+  "$1349 Portugal 12-city guided trip, save $1500",
   "$1399 Ancient Greece guided trip, save $740",
   "$1399 Athens & Crete weeklong trip w/flights & hotels",
   "$1399 Peru small-group adventure w/flights, save $1460",
@@ -191,6 +192,7 @@
   "$949 Explore Athens & Santorini incl. flights",
   "$999 Explore Spain & Portugal: 9 nights w/flights",
   "$999 Lisbon & Porto: 6 nights from DC",
+  "$999 Peru guided tour w/flights, save $1400",
   "American: Los Angeles \u2013 Atlanta (and vice versa). $237 (Basic Economy) / $357 (Regular Economy). Roundtrip, including all Taxes",
   "Non-stop flights from Manchester to Atlanta, USA for \u00a3445",
   "Rock-bottom fares \ud83d\udd25  SAS flights from many European cities to Atlanta, USA from \u20ac248",
