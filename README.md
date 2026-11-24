@@ -17,6 +17,14 @@ and the rest).
    typical range, or a new published deal appears.  Every Monday it emails a
    full digest regardless.  Otherwise it stays silent.
 
+For many date pairs Google Flights sends the flights in a second request after
+the page opens.  When the page comes back empty, the monitor makes that second
+request itself.  Without the token Google's page code adds in a real browser,
+Google returns a reduced set of fares there, so an occasional cheaper itinerary
+can still be missing; Google Flights' own "Any dates" price tracking covers
+those.  If Google limits the second request (HTTP 429), the monitor stops
+asking for that route that day and the email says how many dates were skipped.
+
 Each fare in the email has a "book" link that opens that exact search in
 Google Flights.
 

@@ -29,7 +29,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
+import urllib.parse
+
 import requests
+from primp import Client
 from fast_flights import FlightQuery, Passengers, create_query, fetch_flights_html
 from selectolax.lexbor import LexborHTMLParser
 
@@ -82,13 +85,24 @@ def fetchpair(origin, dest, depart, ret):
     else:
         raise RuntimeError(f"{origin}-{dest} {depart}/{ret}: {lasterr}")
 
-    # Google sometimes leaves fields out of the page; dig() returns None instead
-    # of raising "list index out of range"
-    price = dig(payload, 5, 1, 1)
-    if price is None:
-        return None
+    fare = readfare(payload)
+    if fare is None:
+        # Google often leaves the flights off the first page and sends them in a
+        # second request; ask for that second step ourselves
+        second = secondstep(origin, dest, depart, ret)
+        fare = readfare(second) if second is not None else None
+        if fare is None:
+            return None
+        SECOND["filled"] += 1
 
-    # cheapest listed itinerary, for airline / stops / duration detail
+    fare.update({"depart": depart, "return": ret, "url": q.url()})
+    return fare
+
+
+def readfare(payload):
+    """Cheapest fare and its itinerary detail from one Google Flights payload, or None."""
+    # Google sometimes leaves fields out; dig() returns None instead of raising
+    # "list index out of range"
     best = None
     for section in (dig(payload, 2, 0), dig(payload, 3, 0)):
         for row in section or []:
@@ -105,9 +119,14 @@ def fetchpair(origin, dest, depart, ret):
             except (IndexError, TypeError, KeyError):
                 continue  # one malformed itinerary row does not spoil the fare
 
+    # Google's own lowest price for the dates; fall back to the cheapest listed
+    # itinerary when the price summary is missing
+    price = dig(payload, 5, 1, 1)
+    if price is None and best is not None:
+        price = best["price"]
+    if price is None:
+        return None
     return {
-        "depart": depart,
-        "return": ret,
         "price": price,
         "typical": dig(payload, 5, 2, 1),
         "typicallow": dig(payload, 5, 4, 1),
@@ -115,8 +134,91 @@ def fetchpair(origin, dest, depart, ret):
         "airlines": best["airlines"] if best else [],
         "stops": best["stops"] if best else None,
         "minutes": best["minutes"] if best else None,
-        "url": q.url(),
     }
+
+
+# ------------------------------------------------------ second-step lookup
+#
+# For many date pairs the Google Flights page arrives empty and the browser
+# fetches the flights with a second request (GetShoppingResults).  We send that
+# same request.  Without the token Google's page code adds in a real browser,
+# Google returns a reduced set of fares, so some cheaper itineraries can still be
+# missing; Google Flights' own price tracking covers those.
+
+SHOPPINGURL = ("https://www.google.com/_/FlightsFrontendUi/data/"
+               "travel.frontend.flights.FlightsFrontendService/GetShoppingResults")
+SECOND = {"client": None, "tried": 0, "filled": 0, "blocked": False, "skipped": 0}
+
+
+def secondstep(origin, dest, depart, ret):
+    """Payload with the most itineraries from the second-step request, or None."""
+    if SECOND["blocked"]:
+        SECOND["skipped"] += 1
+        return None
+    if SECOND["client"] is None:
+        SECOND["client"] = Client(impersonate="chrome_145", impersonate_os="macos", referer=True, cookie_store=True)
+        SECOND["client"].get("https://www.google.com/travel/flights", params={"hl": "en", "curr": CONFIG["currency"]})
+
+    def leg(a, b, day):
+        return [[[[a, 0]]], [[[b, 0]]], None, 0, None, None, day, None, None, None, None, None, None, None, 3]
+
+    filters = [None, None, 1, None, [], 1, [CONFIG["passengers"], 0, 0, 0], None, None, None, None, None, None,
+               [leg(origin, dest, depart), leg(dest, origin, ret)], None, None, None, 1]
+    inner = json.dumps([[], filters, 0, 0, 0, 1], separators=(",", ":"))
+    body = "f.req=" + urllib.parse.quote(json.dumps([None, inner], separators=(",", ":")))
+    SECOND["tried"] += 1
+    try:
+        r = SECOND["client"].post(
+            SHOPPINGURL + f"?hl=en&curr={CONFIG['currency']}&rt=c",
+            headers={"content-type": "application/x-www-form-urlencoded;charset=UTF-8", "x-same-domain": "1",
+                     "x-goog-ext-259736195-jspb": json.dumps(["en-US", "US", CONFIG["currency"], 2, None, [300],
+                                                               None, None, 7, []], separators=(",", ":"))},
+            content=body.encode())
+    except Exception as exc:  # noqa: BLE001
+        print(f"WARN second step {origin}-{dest} {depart}/{ret}: {exc}", file=sys.stderr)
+        return None
+    if r.status_code == 429:
+        # Google is limiting us: stop asking for the rest of this route so we do
+        # not make it worse; the count is reported in the email
+        print(f"WARN second step limited by Google (HTTP 429) at {origin}-{dest} {depart}", file=sys.stderr)
+        SECOND["blocked"] = True
+        return None
+    if r.status_code != 200:
+        print(f"WARN second step {origin}-{dest} {depart}/{ret}: HTTP {r.status_code}", file=sys.stderr)
+        return None
+    best, bestrows = None, -1
+    for payload in shoppingpayloads(r.text):
+        rows = len(dig(payload, 2, 0) or []) + len(dig(payload, 3, 0) or [])
+        if rows > bestrows:
+            best, bestrows = payload, rows
+    return best
+
+
+def shoppingpayloads(text):
+    """Each result payload inside a GetShoppingResults response."""
+    dec = json.JSONDecoder()
+    s = text.split("\n", 1)[1] if text.startswith(")]}'") else text
+    i = 0
+    while True:
+        while i < len(s) and s[i].isspace():
+            i += 1
+        j = i
+        while j < len(s) and s[j].isdigit():  # each frame starts with its length
+            j += 1
+        if j == i:
+            return
+        while j < len(s) and s[j].isspace():
+            j += 1
+        try:
+            frame, i = dec.raw_decode(s, j)
+        except ValueError:
+            return
+        for entry in frame:
+            if isinstance(entry, list) and len(entry) > 2 and entry[0] == "wrb.fr" and isinstance(entry[2], str):
+                try:
+                    yield json.loads(entry[2])
+                except ValueError:
+                    continue
 
 
 def scanroute(key):
@@ -153,9 +255,11 @@ def scanroute(key):
         return
 
     (RESULTSDIR / f"{key}.json").write_text(json.dumps(
-        {"key": key, "scanned": today.isoformat(), "lookups": total, "failures": failures, "pairs": pairs},
+        {"key": key, "scanned": today.isoformat(), "lookups": total, "failures": failures,
+         "secondfilled": SECOND["filled"], "secondskipped": SECOND["skipped"], "pairs": pairs},
         indent=1))
-    print(f"{key}: {len(pairs)} priced date pairs from {total} lookups ({failures} failed)")
+    print(f"{key}: {len(pairs)} priced date pairs from {total} lookups ({failures} failed); "
+          f"second step filled {SECOND['filled']} of {SECOND['tried']} tried, {SECOND['skipped']} skipped after Google limited it")
 
 
 # ------------------------------------------------------------ deal feeds
@@ -206,7 +310,7 @@ def buildreport():
     today = dt.date.today()
     weekly = today.strftime("%A") == CONFIG["weeklydigestday"]
 
-    sections, alerts = [], []
+    sections, alerts, limited = [], [], []
     newlows = {}
 
     for route in CONFIG["routes"]:
@@ -221,6 +325,8 @@ def buildreport():
             if route["key"] in lows:
                 newlows[route["key"]] = lows[route["key"]]
             continue
+        if data.get("secondskipped"):
+            limited.append(f"{route['label']} ({data['secondskipped']})")
         pairs = sorted(data["pairs"], key=lambda p: p["price"])
         if not pairs:
             continue
@@ -281,6 +387,9 @@ def buildreport():
         "seendeals": sorted(seen | {d[1] for d in dealhits})[-300:],
     }, indent=1))
 
+    if limited:
+        sections.append("<p style=\"color:#888\">Google limited the second lookup today, so these routes have fewer "
+                        "dates priced than usual (dates skipped in brackets): " + ", ".join(limited) + ".</p>")
     return alerts, weekly, sections
 
 
