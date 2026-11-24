@@ -42,6 +42,18 @@ UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Sa
 
 # ---------------------------------------------------------------- scanning
 
+def dig(obj, *path):
+    """obj[a][b][c]..., or None if any step is missing."""
+    for key in path:
+        try:
+            obj = obj[key]
+        except (IndexError, KeyError, TypeError):
+            return None
+        if obj is None:
+            return None
+    return obj
+
+
 def fetchpair(origin, dest, depart, ret):
     """One Google Flights round-trip lookup.  Returns dict or None if no fares."""
     q = create_query(
@@ -60,7 +72,9 @@ def fetchpair(origin, dest, depart, ret):
             node = page.css_first(r"script.ds\:1")
             if node is None:
                 raise RuntimeError("no data script in page")
-            payload = json.loads(node.text().split("data:", 1)[1].rsplit(",", 1)[0])
+            # raw_decode reads the first complete JSON value and ignores whatever
+            # Google appends after it (that trailing text caused "Extra data" errors)
+            payload, _ = json.JSONDecoder().raw_decode(node.text().split("data:", 1)[1].lstrip())
             break
         except Exception as exc:  # noqa: BLE001
             lasterr = exc
@@ -68,33 +82,36 @@ def fetchpair(origin, dest, depart, ret):
     else:
         raise RuntimeError(f"{origin}-{dest} {depart}/{ret}: {lasterr}")
 
-    insights = payload[5]
-    if not insights or not insights[1] or insights[1][1] is None:
+    # Google sometimes leaves fields out of the page; dig() returns None instead
+    # of raising "list index out of range"
+    price = dig(payload, 5, 1, 1)
+    if price is None:
         return None
 
     # cheapest listed itinerary, for airline / stops / duration detail
     best = None
-    for section in (payload[2], payload[3]):
-        if not section or not section[0]:
-            continue
-        for row in section[0]:
-            price = row[1][0][1]
-            legs = row[0][2]
-            if best is None or price < best["price"]:
-                best = {
-                    "price": price,
-                    "airlines": row[0][1],
-                    "stops": len(legs) - 1,
-                    "minutes": row[0][9] if isinstance(row[0][9], int) else sum(l[11] or 0 for l in legs),
-                }
+    for section in (dig(payload, 2, 0), dig(payload, 3, 0)):
+        for row in section or []:
+            try:
+                rowprice = row[1][0][1]
+                legs = row[0][2]
+                if best is None or rowprice < best["price"]:
+                    best = {
+                        "price": rowprice,
+                        "airlines": row[0][1],
+                        "stops": len(legs) - 1,
+                        "minutes": row[0][9] if isinstance(row[0][9], int) else sum(l[11] or 0 for l in legs),
+                    }
+            except (IndexError, TypeError, KeyError):
+                continue  # one malformed itinerary row does not spoil the fare
 
     return {
         "depart": depart,
         "return": ret,
-        "price": insights[1][1],
-        "typical": insights[2][1] if insights[2] else None,
-        "typicallow": insights[4][1] if insights[4] else None,
-        "typicalhigh": insights[5][1] if insights[5] else None,
+        "price": price,
+        "typical": dig(payload, 5, 2, 1),
+        "typicallow": dig(payload, 5, 4, 1),
+        "typicalhigh": dig(payload, 5, 5, 1),
         "airlines": best["airlines"] if best else [],
         "stops": best["stops"] if best else None,
         "minutes": best["minutes"] if best else None,
@@ -125,10 +142,16 @@ def scanroute(key):
             time.sleep(random.uniform(0.5, 1.0))
         day += dt.timedelta(days=1)
 
-    if total and failures / total > 0.4:
-        raise SystemExit(f"{key}: {failures}/{total} lookups failed, refusing to report on bad data")
-
     RESULTSDIR.mkdir(exist_ok=True)
+    if total and failures / total > 0.4:
+        # too many failed lookups to trust: record that instead of prices, and let
+        # the report name this route in the email (the run itself stays green)
+        (RESULTSDIR / f"{key}.json").write_text(json.dumps(
+            {"key": key, "scanned": today.isoformat(), "lookups": total, "failures": failures,
+             "notscanned": True, "pairs": []}, indent=1))
+        print(f"{key}: {failures}/{total} lookups failed, not reporting prices today")
+        return
+
     (RESULTSDIR / f"{key}.json").write_text(json.dumps(
         {"key": key, "scanned": today.isoformat(), "lookups": total, "failures": failures, "pairs": pairs},
         indent=1))
@@ -192,6 +215,12 @@ def buildreport():
             alerts.append(f"{route['label']}: no scan results (job failed?)")
             continue
         data = json.loads(f.read_text())
+        if data.get("notscanned"):
+            alerts.append(f"{route['label']}: not scanned today ({data['failures']} of {data['lookups']} price checks failed)")
+            # keep the stored lows so a bad day does not wipe the history
+            if route["key"] in lows:
+                newlows[route["key"]] = lows[route["key"]]
+            continue
         pairs = sorted(data["pairs"], key=lambda p: p["price"])
         if not pairs:
             continue
@@ -256,13 +285,15 @@ def buildreport():
 
 
 def sendemail(subject, body):
-    user, pw, to = os.environ["GMAILUSER"], os.environ["GMAILAPPPASSWORD"], os.environ["ALERTRECIPIENT"]
+    user, pw = os.environ["GMAILUSER"], os.environ["GMAILAPPPASSWORD"]
+    # ALERTRECIPIENT may hold several addresses separated by commas
+    to = [a.strip() for a in os.environ["ALERTRECIPIENT"].split(",") if a.strip()]
     msg = MIMEMultipart("alternative")
-    msg["Subject"], msg["From"], msg["To"] = subject, user, to
+    msg["Subject"], msg["From"], msg["To"] = subject, user, ", ".join(to)
     msg.attach(MIMEText(body, "html"))
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
         s.login(user, pw)
-        s.sendmail(user, [to], msg.as_string())
+        s.sendmail(user, to, msg.as_string())
 
 
 def report():

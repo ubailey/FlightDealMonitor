@@ -28,7 +28,7 @@ Repository secrets (Settings, Secrets and variables, Actions):
 | --- | --- |
 | `GMAILUSER` | sending Gmail address |
 | `GMAILAPPPASSWORD` | 16-character Gmail app password |
-| `ALERTRECIPIENT` | where the alert goes |
+| `ALERTRECIPIENT` | where the alert goes; several addresses separated by commas |
 
 Then Actions tab, Daily Flight Deal Check, Run workflow.  The first run sets
 the baseline (every month shows "first look") and sends the email so you can
@@ -46,6 +46,8 @@ see the layout.
 
 ## Failure behaviour
 
-A route whose lookups fail more than 20 percent of the time refuses to report
-rather than emailing bad data, and GitHub emails you the failed run.  The
-report job still runs on the routes that succeeded and names the missing ones.
+A route whose lookups fail more than 40 percent of the time does not report
+prices that day, so bad data is never emailed.  The run still finishes green
+(no GitHub failure email); instead the deal email names the route as "not
+scanned today" with its failure count, and the route's stored monthly lows are
+kept.  A route whose job breaks outright is named as "no scan results".
