@@ -168,10 +168,10 @@
       ]
     },
     {
-      "key": "ATLRMU",
+      "key": "ATLALC",
       "from": "ATL",
-      "to": "RMU",
-      "label": "Atlanta to Murcia",
+      "to": "ALC",
+      "label": "Atlanta to Alicante (for Murcia)",
       "triplengths": [
         7,
         10
@@ -269,6 +269,7 @@
     "peru",
     "madrid",
     "murcia",
+    "alicante",
     "granada",
     "zaragoza",
     "athens",
